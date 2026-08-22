@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState } from "react";
+import type { ErrorInfo, ReactNode } from "react";
 import type { CatalogItem, Contact, PayMethod, Reservation } from "../lib/types";
 import {
   addDaysIso,
@@ -35,7 +36,7 @@ const STEPS: [Step, string][] = [
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export default function Booking({ prefill, onClose }: { prefill: Prefill; onClose: () => void }) {
+function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => void }) {
   const toast = useToast();
   useBodyLock(true);
   useEscape(true, onClose);
@@ -705,6 +706,64 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
         )}
       </aside>
     </div>
+  );
+}
+
+/* Filet de sécurité : même en cas d'erreur interne, le panneau ne reste
+   jamais vide — l'utilisateur voit un message et peut réessayer. */
+class DrawerBoundary extends Component<
+  { children: ReactNode; onClose: () => void },
+  { error: string | null }
+> {
+  state = { error: null as string | null };
+  static getDerivedStateFromError(err: unknown) {
+    return { error: err instanceof Error ? err.message : "Erreur interne inattendue" };
+  }
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("[Azalaï — réservation]", error, info);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="fade-in fixed inset-0 z-[70] flex items-center justify-center bg-night/85 p-6">
+          <div className="w-full max-w-md border border-brass/40 bg-paper p-8 text-ink shadow-[0_30px_90px_rgba(0,0,0,0.5)]">
+            <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-clay">Résidence Azalaï — assistance</div>
+            <h3 className="mt-3 font-display text-2xl font-light">Le panneau a rencontré un imprévu.</h3>
+            <p className="mt-3 text-sm leading-relaxed text-ink/65">
+              Rien de grave : vos dates ne sont pas perdues. Réessayez, et si le problème
+              persiste, la réception vous réserve par téléphone au{" "}
+              <span className="font-medium text-ink">+225 27 22 49 49 49</span>.
+            </p>
+            <p className="mt-3 border border-ink/10 bg-parch px-3 py-2 font-mono text-[11px] text-ink/55">
+              Détail : {this.state.error}
+            </p>
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => this.setState({ error: null })}
+                className="flex-1 bg-ink py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] text-paper transition-colors hover:bg-clay"
+              >
+                Réessayer
+              </button>
+              <button
+                onClick={this.props.onClose}
+                className="border border-ink/25 px-5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/60 transition-colors hover:border-ink hover:text-ink"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default function Booking({ prefill, onClose }: { prefill: Prefill; onClose: () => void }) {
+  return (
+    <DrawerBoundary onClose={onClose}>
+      <BookingInner prefill={prefill} onClose={onClose} />
+    </DrawerBoundary>
   );
 }
 

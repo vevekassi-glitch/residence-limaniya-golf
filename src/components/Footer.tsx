@@ -3,7 +3,7 @@ import { useToast } from "./ui";
 import { IconArrowUp, IconPin, IconClock, IconPhone } from "./icons";
 import { METHOD_LOGOS } from "./icons";
 
-export default function Footer({ onApi }: { onApi: () => void }) {
+export default function Footer() {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const subscribe = () => {
@@ -38,24 +38,6 @@ export default function Footer({ onApi }: { onApi: () => void }) {
               })}
             </div>
 
-            {/* accès backend */}
-            <button
-              onClick={onApi}
-              className="group mt-8 w-full max-w-md border border-sand/15 px-5 py-4 text-left transition-colors duration-300 hover:border-brass/60 hover:bg-pine/60"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-brass">Backend API — Laravel 12</span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-sand/50 transition-colors group-hover:text-brass">
-                  Documentation →
-                </span>
-              </div>
-              <code className="mt-2 block truncate font-mono text-[13px] text-sand/85">
-                http://127.0.0.1:8000/api/v1
-              </code>
-              <span className="mt-1.5 block text-xs text-sand/45">
-                Sources dans le dossier /backend — 9 endpoints, webhooks signés, anti double-réservation.
-              </span>
-            </button>
           </div>
 
           <div className="grid grid-cols-2 gap-10">
@@ -124,9 +106,13 @@ export default function Footer({ onApi }: { onApi: () => void }) {
 
         <div className="hairline-t mt-16 flex flex-wrap items-center justify-between gap-4 pt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-sand/40">
           <span>© 2026 Résidence Azalaï — Abidjan, Côte d'Ivoire</span>
-          <button onClick={onApi} className="text-sand/55 underline decoration-brass/50 underline-offset-4 transition-colors hover:text-brass">
-            API : http://127.0.0.1:8000/api/v1
-          </button>
+          <span className="flex items-center gap-2">
+            <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brass/60">
+              <rect x="4" y="10" width="16" height="11" rx="1.5" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+            Paiements chiffrés — aucune donnée carte stockée
+          </span>
           <span>RCCM CI-ABJ-2026-B-01847 · Agrément tourisme n° 00412</span>
         </div>
       </div>
