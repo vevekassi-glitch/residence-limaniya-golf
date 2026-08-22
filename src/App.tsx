@@ -12,11 +12,13 @@ import Testimonials from "./components/Testimonials";
 import Faq from "./components/Faq";
 import Footer from "./components/Footer";
 import Booking from "./components/Booking";
+import ApiPanel from "./components/ApiPanel";
 import { ToastProvider } from "./components/ui";
 import { addDaysIso, todayIso } from "./lib/api";
 
 export default function App() {
   const [booking, setBooking] = useState<Prefill | null>(null);
+  const [apiOpen, setApiOpen] = useState(false);
 
   const openBooking = useCallback((p?: Prefill) => {
     setBooking(
@@ -38,8 +40,9 @@ export default function App() {
         <Testimonials />
         <Faq />
       </main>
-      <Footer />
+      <Footer onApi={() => setApiOpen(true)} />
       {booking && <Booking prefill={booking} onClose={() => setBooking(null)} />}
+      {apiOpen && <ApiPanel onClose={() => setApiOpen(false)} />}
     </ToastProvider>
   );
 }
