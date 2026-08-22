@@ -102,7 +102,7 @@ export async function checkAvailability(itemId: string, from: string, to: string
   if (to === from && item.kind !== "hall") throw new ApiError("VALIDATION", "La date de départ doit être postérieure à l'arrivée.");
   if (from < todayIso()) throw new ApiError("VALIDATION", "Impossible de réserver dans le passé — même à Abidjan.");
   const h = hashCode(itemId + from + to);
-  const remaining = item.kind === "hall" ? (h % 6 === 0 ? 0 : 1) : Math.max(h % 7 === 0 ? 0 : (h % item.stock) + 1, 0);
+  const remaining = item.kind === "hall" ? (h % 9 === 0 ? 0 : 1) : h % 13 === 0 ? 0 : (h % item.stock) + 1;
   return { itemId, from, to, remaining };
 }
 

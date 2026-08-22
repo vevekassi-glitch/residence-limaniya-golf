@@ -49,10 +49,20 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
   const [remaining, setRemaining] = useState<number | null>(null);
   const [checking, setChecking] = useState(false);
 
+  /* Jamais d'undefined dans le contact : une valeur de stockage corrompue
+     ne doit jamais bloquer (ni faire crasher) la saisie. */
   const stored = useMemo<Contact>(() => {
+    const sanitize = (raw: unknown): Contact => {
+      const c = (raw ?? {}) as Partial<Contact>;
+      return {
+        name: typeof c.name === "string" ? c.name : "",
+        email: typeof c.email === "string" ? c.email : "",
+        phone: typeof c.phone === "string" ? c.phone : "",
+      };
+    };
     try {
       const raw = localStorage.getItem("azalai-contact");
-      return raw ? JSON.parse(raw) : { name: "", email: "", phone: "" };
+      return sanitize(raw ? JSON.parse(raw) : null);
     } catch {
       return { name: "", email: "", phone: "" };
     }
@@ -72,6 +82,7 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
   const [payError, setPayError] = useState("");
   const [reservation, setReservation] = useState<Reservation | null>(null);
   const alive = useRef(true);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     alive.current = true;
@@ -79,6 +90,11 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
       alive.current = false;
     };
   }, []);
+
+  /* Chaque étape commence en haut du panneau, jamais au milieu. */
+  useEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0 });
+  }, [step]);
 
   const items = CATALOG.filter((c) => c.kind === kind);
   const item: CatalogItem | null = itemId ? getItem(itemId) : null;
@@ -129,16 +145,22 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
 
   /* ——— Étape 2 → 3 ——— */
   const validateStep2 = () => {
+    const name = (contact.name ?? "").trim();
+    const email = (contact.email ?? "").trim();
+    const phone = contact.phone ?? "";
     const e: Record<string, string> = {};
-    if (contact.name.trim().length < 3) e.name = "Nom complet requis (3 caractères min.)";
-    if (!validEmail(contact.email)) e.email = "Adresse e-mail invalide.";
-    if (!normalizePhone(contact.phone)) e.phone = "10 chiffres attendus, ex. 07 08 09 10 11";
+    if (name.length < 3) e.name = "Nom complet requis (3 caractères min.)";
+    if (!validEmail(email)) e.email = "Adresse e-mail invalide — ex. awa@exemple.ci";
+    if (!normalizePhone(phone)) e.phone = "10 chiffres attendus — ex. 07 08 09 10 11";
     setErrors(e);
     if (Object.keys(e).length) return;
+    const clean: Contact = { name, email, phone };
+    setContact(clean);
     try {
-      localStorage.setItem("azalai-contact", JSON.stringify(contact));
-    } catch { /* stockage indisponible */ }
+      localStorage.setItem("azalai-contact", JSON.stringify(clean));
+    } catch { /* stockage indisponible — on continue quand même */ }
     setStep(3);
+    toast("Coordonnées enregistrées.");
   };
 
   /* ——— Paiement ——— */
@@ -279,7 +301,7 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
         </nav>
 
         {/* corps */}
-        <div className="slim-scroll flex-1 overflow-y-auto px-6 py-7 md:px-8">
+        <div ref={bodyRef} className="slim-scroll relative flex-1 overflow-y-auto px-6 py-7 md:px-8">
           {step === 1 && (
             <div key="s1" className="step-in space-y-7">
               <div className="flex border border-ink/15">
@@ -391,18 +413,46 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
           )}
 
           {step === 2 && (
-            <div key="s2" className="step-in space-y-7">
+            <form
+              key="s2"
+              className="step-in space-y-7"
+              onSubmit={(e) => {
+                e.preventDefault();
+                validateStep2();
+              }}
+            >
               <p className="text-sm leading-relaxed text-ink/65">
                 Ces coordonnées serviront pour la confirmation, la facture et toute correspondance de la réception.
               </p>
               <div>
                 <FieldLabel>Nom complet</FieldLabel>
-                <input value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} placeholder="Awa N'Diaye" className={`field ${errors.name ? "err" : ""}`} />
+                <input
+                  type="text"
+                  autoFocus
+                  autoComplete="name"
+                  value={contact.name}
+                  onChange={(e) => {
+                    setContact({ ...contact, name: e.target.value });
+                    if (errors.name) clearErr("name");
+                  }}
+                  placeholder="Awa N'Diaye"
+                  className={`field ${errors.name ? "err" : ""}`}
+                />
                 <Err msg={errors.name} />
               </div>
               <div>
                 <FieldLabel>Adresse e-mail</FieldLabel>
-                <input type="email" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} placeholder="awa@exemple.ci" className={`field ${errors.email ? "err" : ""}`} />
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={contact.email}
+                  onChange={(e) => {
+                    setContact({ ...contact, email: e.target.value });
+                    if (errors.email) clearErr("email");
+                  }}
+                  placeholder="awa@exemple.ci"
+                  className={`field ${errors.email ? "err" : ""}`}
+                />
                 <Err msg={errors.email} />
               </div>
               <div>
@@ -410,22 +460,31 @@ export default function Booking({ prefill, onClose }: { prefill: Prefill; onClos
                 <div className="flex gap-3">
                   <span className="field pointer-events-none w-20 shrink-0 text-center text-ink/50">+225</span>
                   <input
+                    type="tel"
+                    autoComplete="tel-national"
                     value={contact.phone}
-                    onChange={(e) => setContact({ ...contact, phone: e.target.value })}
+                    onChange={(e) => {
+                      setContact({ ...contact, phone: e.target.value });
+                      if (errors.phone) clearErr("phone");
+                    }}
                     placeholder="07 08 09 10 11"
                     inputMode="tel"
                     className={`field ${errors.phone ? "err" : ""}`}
                   />
                 </div>
                 <Err msg={errors.phone} />
+                <p className="mt-2 text-xs text-ink/45">10 chiffres, sans le préfixe +225.</p>
               </div>
               <div className="flex gap-3 pt-2">
                 <BackBtn onClick={() => setStep(1)} />
-                <button onClick={validateStep2} className="group flex flex-1 items-center justify-center gap-3 bg-ink py-4 font-mono text-[11px] uppercase tracking-[0.24em] text-paper transition-colors hover:bg-clay">
+                <button
+                  type="submit"
+                  className="group flex flex-1 items-center justify-center gap-3 bg-ink py-4 font-mono text-[11px] uppercase tracking-[0.24em] text-paper transition-colors hover:bg-clay"
+                >
                   Vers le paiement <IconArrowInline />
                 </button>
               </div>
-            </div>
+            </form>
           )}
 
           {step === 3 && item && quote && (
@@ -668,6 +727,7 @@ function Row({ k, v }: { k: string; v: string }) {
 function BackBtn({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       className="border border-ink/20 px-5 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/60 transition-colors hover:border-ink hover:text-ink disabled:opacity-40"
