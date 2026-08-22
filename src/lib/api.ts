@@ -1,17 +1,41 @@
 /**
  * Client API — Résidence Azalaï
  * -----------------------------
- * Simulation navigateur du backend Laravel 12 (voir ARCHITECTURE.md).
- * Chaque fonction reproduit le contrat HTTP de son endpoint :
- *   checkAvailability()      → GET  /api/v1/availability
- *   createReservation()      → POST /api/v1/reservations
- *   initiateMobilePayment()  → POST /api/v1/payments/initiate  (CinetPay)
- *   pollPaymentStatus()      → GET  /api/v1/payments/{ref}/status
- *   payByCard()              → POST /api/v1/payments/card      (Stripe PaymentIntents)
+ * MODE DOUBLE :
+ *  - Si VITE_API_URL est défini (fichier .env à la racine du front),
+ *    les appels partent vers le vrai backend Laravel 12 (dossier /backend) :
+ *        VITE_API_URL=http://127.0.0.1:8000/api/v1
+ *  - Sinon, la couche simulation ci-dessous reproduit fidèlement les mêmes
+ *    contrats HTTP (latence, validations, codes d'erreur) pour la démo.
+ *
+ * Correspondance des endpoints (voir backend/README.md) :
+ *   checkAvailability()      → GET  /availability
+ *   createReservation()      → POST /reservations
+ *   initiateMobilePayment()  → POST /payments/initiate   (CinetPay)
+ *   pollPaymentStatus()      → GET  /payments/{ref}/status
+ *   payByCard()              → POST /payments/card       (Stripe PaymentIntents)
  */
 import { ApiError } from "./types";
 import type { AvailabilityResult, CatalogItem, Contact, ItemKind, PayMethod, Quote } from "./types";
 import { CATALOG } from "./data";
+
+const API_BASE: string | null =
+  ((import.meta as unknown as { env?: Record<string, string | undefined> }).env?.VITE_API_URL ?? null);
+
+async function remote<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    ...init,
+  });
+  const data: Record<string, unknown> = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new ApiError(
+      (data.code as string) ?? `HTTP_${res.status}`,
+      (data.message as string) ?? "Le serveur a renvoyé une erreur."
+    );
+  }
+  return data as T;
+}
 
 const VAT_RATE = 0.18;
 const SERVICE_RATE = 0.07;
@@ -66,21 +90,23 @@ export function validEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 }
 
-/* ——— GET /api/v1/availability ——— */
+/* ——— GET /availability ——— */
 export async function checkAvailability(itemId: string, from: string, to: string): Promise<AvailabilityResult> {
+  if (API_BASE) {
+    return remote<AvailabilityResult>(`/availability?item_id=${encodeURIComponent(itemId)}&from=${from}&to=${to}`);
+  }
   await wait(latency());
   const item = getItem(itemId);
   if (!from || !to) throw new ApiError("VALIDATION", "Les dates d'arrivée et de départ sont requises.");
-  // une salle se réserve à la journée : arrivée == départ est valide
-  if (to < from || (to === from && item.kind === "room"))
-    throw new ApiError("VALIDATION", "La date de départ doit être postérieure à l'arrivée.");
+  if (to < from) throw new ApiError("VALIDATION", "La date de départ doit être postérieure à l'arrivée.");
+  if (to === from && item.kind !== "hall") throw new ApiError("VALIDATION", "La date de départ doit être postérieure à l'arrivée.");
   if (from < todayIso()) throw new ApiError("VALIDATION", "Impossible de réserver dans le passé — même à Abidjan.");
   const h = hashCode(itemId + from + to);
   const remaining = item.kind === "hall" ? (h % 6 === 0 ? 0 : 1) : Math.max(h % 7 === 0 ? 0 : (h % item.stock) + 1, 0);
   return { itemId, from, to, remaining };
 }
 
-/* ——— POST /api/v1/reservations ——— */
+/* ——— POST /reservations ——— */
 export async function createReservation(args: {
   kind: ItemKind;
   itemId: string;
@@ -89,6 +115,21 @@ export async function createReservation(args: {
   guests: number;
   contact: Contact;
 }): Promise<{ reference: string; quote: Quote }> {
+  if (API_BASE) {
+    return remote<{ reference: string; quote: Quote }>("/reservations", {
+      method: "POST",
+      body: JSON.stringify({
+        kind: args.kind,
+        item_id: args.itemId,
+        from: args.from,
+        to: args.to,
+        guests: args.guests,
+        name: args.contact.name,
+        email: args.contact.email,
+        phone: args.contact.phone,
+      }),
+    });
+  }
   await wait(latency());
   const item = getItem(args.itemId);
   if (args.guests < 1 || args.guests > item.capacity)
@@ -105,12 +146,19 @@ export async function createReservation(args: {
 const mobileLedger = new Map<string, { startedAt: number; willFail: boolean }>();
 let txCounter = 1841;
 
-/* ——— POST /api/v1/payments/initiate (CinetPay) ——— */
+/* ——— POST /payments/initiate (CinetPay) ——— */
 export async function initiateMobilePayment(args: {
   reference: string;
   method: PayMethod;
   phone: string;
 }): Promise<{ transactionRef: string; status: "PENDING"; message: string }> {
+  if (API_BASE) {
+    const res = await remote<{ transaction_ref: string; status: string; message: string }>("/payments/initiate", {
+      method: "POST",
+      body: JSON.stringify({ reference: args.reference, method: args.method, phone: args.phone }),
+    });
+    return { transactionRef: res.transaction_ref, status: "PENDING", message: res.message };
+  }
   await wait(latency());
   const phone = normalizePhone(args.phone);
   if (!phone) throw new ApiError("VALIDATION", "Numéro Mobile Money invalide — 10 chiffres attendus.");
@@ -125,8 +173,13 @@ export async function initiateMobilePayment(args: {
   };
 }
 
-/* ——— GET /api/v1/payments/{ref}/status ——— */
+/* ——— GET /payments/{ref}/status ——— */
 export async function pollPaymentStatus(transactionRef: string): Promise<{ status: "PENDING" | "CONFIRMED" | "FAILED"; message?: string }> {
+  if (API_BASE) {
+    return remote<{ status: "PENDING" | "CONFIRMED" | "FAILED"; message?: string }>(
+      `/payments/${encodeURIComponent(transactionRef)}/status`
+    );
+  }
   await wait(900);
   const entry = mobileLedger.get(transactionRef);
   if (!entry) throw new ApiError("NOT_FOUND", "Transaction introuvable.");
@@ -153,7 +206,7 @@ function luhnValid(num: string) {
   return sum % 10 === 0;
 }
 
-/* ——— POST /api/v1/payments/card (Stripe PaymentIntents) ——— */
+/* ——— POST /payments/card (Stripe PaymentIntents) ——— */
 export async function payByCard(args: {
   reference: string;
   method: PayMethod;
@@ -161,7 +214,25 @@ export async function payByCard(args: {
   expiry: string;
   cvc: string;
   holder: string;
+  /** En mode API réelle : payment_method_id fourni par Stripe Elements (voir backend/README.md §5). */
+  paymentMethodId?: string;
 }): Promise<{ transactionRef: string; status: "CONFIRMED"; authCode: string }> {
+  if (API_BASE) {
+    if (!args.paymentMethodId) {
+      throw new ApiError(
+        "INTEGRATION",
+        "En mode API réelle, la saisie carte doit passer par Stripe Elements (payment_method_id) — voir backend/README.md §5."
+      );
+    }
+    const res = await remote<{ transaction_ref: string; status: string }>("/payments/card", {
+      method: "POST",
+      body: JSON.stringify({ reference: args.reference, payment_method_id: args.paymentMethodId }),
+    });
+    if (res.status !== "CONFIRMED" && res.status !== "REQUIRES_ACTION") {
+      throw new ApiError("DECLINED", "Le paiement carte n'a pas abouti.");
+    }
+    return { transactionRef: res.transaction_ref, status: "CONFIRMED", authCode: "" };
+  }
   const digits = args.cardNumber.replace(/\D/g, "");
   if (!luhnValid(digits)) throw new ApiError("VALIDATION", "Numéro de carte invalide (contrôle de Luhn échoué).");
   const m = args.expiry.match(/^(\d{2})\s?\/\s?(\d{2})$/);
