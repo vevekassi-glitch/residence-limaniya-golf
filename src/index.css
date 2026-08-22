@@ -1,1 +1,270 @@
 @import "tailwindcss";
+
+@theme {
+  --color-night: #0b1a14;
+  --color-pine: #0f231b;
+  --color-moss: #163023;
+  --color-fern: #24493a;
+  --color-sage: #7fa08f;
+  --color-mist: #b9c8bd;
+  --color-sand: #e9e1ce;
+  --color-paper: #f2efe6;
+  --color-parch: #ece7d8;
+  --color-ink: #0e211a;
+  --color-brass: #c9a24b;
+  --color-brassl: #e6c887;
+  --color-clay: #b0703c;
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Archivo", "Helvetica Neue", sans-serif;
+  --font-mono: "Spline Sans Mono", "SFMono-Regular", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-night);
+  color: var(--color-sand);
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-brass);
+  color: var(--color-night);
+}
+
+/* ------- grain / texture over everything ------- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 9s steps(6) infinite;
+}
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -4%); }
+  60% { transform: translate(-3%, -2%); }
+  80% { transform: translate(4%, 3%); }
+}
+
+/* ------- scroll reveal ------- */
+.rv {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------- line-mask reveal (signature) ------- */
+.mline {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.mline > span {
+  display: block;
+  transform: translateY(115%);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero-in .mline > span {
+  transform: translateY(0);
+}
+
+/* ------- ken burns breathing ------- */
+@keyframes kb {
+  from { transform: scale(1.06) translateY(0); }
+  to { transform: scale(1.16) translateY(-1.5%); }
+}
+.kenburns {
+  animation: kb 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.imgkb {
+  overflow: hidden;
+}
+.imgkb img {
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.imgkb:hover img {
+  transform: scale(1.07);
+}
+
+/* ------- marquee tickers ------- */
+@keyframes tickx {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: tickx 42s linear infinite;
+}
+.ticker-track.rev {
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+/* ------- pulsing availability dot ------- */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 75, 0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(201, 162, 75, 0); }
+}
+.pulse-dot {
+  animation: pulse-dot 2.2s ease-out infinite;
+}
+
+/* ------- drawer + modals ------- */
+@keyframes slide-in-r {
+  from { transform: translateX(6%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.drawer-in {
+  animation: slide-in-r 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fade-in 0.4s ease both;
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+.step-in {
+  animation: step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ------- check draw ------- */
+@keyframes draw-check {
+  to { stroke-dashoffset: 0; }
+}
+.draw-check {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: draw-check 0.7s 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ring-pop {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.ring-pop {
+  animation: ring-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ------- phone push notification ------- */
+@keyframes push-in {
+  0% { transform: translateY(-120%); opacity: 0; }
+  12%, 84% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-120%); opacity: 0; }
+}
+.push-note {
+  animation: push-in 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* ------- loading dots ------- */
+@keyframes dotblink {
+  0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+.ldots span {
+  animation: dotblink 1.1s infinite both;
+}
+.ldots span:nth-child(2) { animation-delay: 0.15s; }
+.ldots span:nth-child(3) { animation-delay: 0.3s; }
+
+/* ------- scroll cue ------- */
+@keyframes cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.cue-line {
+  animation: cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* ------- forms ------- */
+input[type="date"] {
+  color-scheme: dark;
+}
+.paper-scheme input[type="date"] {
+  color-scheme: light;
+}
+
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(14, 33, 26, 0.25);
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.3s ease;
+  border-radius: 0;
+}
+.field:focus {
+  border-color: var(--color-brass);
+}
+.field.err {
+  border-color: #b3432e;
+}
+
+/* accordion */
+.acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.acc-body.open {
+  grid-template-rows: 1fr;
+}
+.acc-body > div {
+  overflow: hidden;
+}
+
+/* thin scrollbar for item pickers */
+.slim-scroll::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+.slim-scroll::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 75, 0.4);
+}
+
+/* hairline utility */
+.hairline-t { border-top: 1px solid rgba(233, 225, 206, 0.14); }
+.hairline-b { border-bottom: 1px solid rgba(233, 225, 206, 0.14); }
+.paper .hairline-t, .hairline-t.dark-line { border-top-color: rgba(14, 33, 26, 0.16); }
+.paper .hairline-b, .hairline-b.dark-line { border-bottom-color: rgba(14, 33, 26, 0.16); }
+
+/* ------- reduced motion ------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body::after { animation: none; }
+  .rv, .mline > span { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .kenburns, .ticker-track, .pulse-dot, .push-note, .cue-line { animation: none !important; }
+  .ticker-track { flex-wrap: wrap; width: 100%; }
+  .imgkb img { transition: none; }
+  .drawer-in, .fade-in, .step-in { animation-duration: 0.01ms !important; }
+  .draw-check { stroke-dashoffset: 0; animation: none; }
+  .ldots span { animation: none; opacity: 1; }
+}
