@@ -1,5 +1,5 @@
 /**
- * Client API — Résidence Azalaï
+ * Client API — Résidence Limaniya Golf
  * -----------------------------
  * MODE DOUBLE :
  *  - Si VITE_API_URL est défini (fichier .env à la racine du front),

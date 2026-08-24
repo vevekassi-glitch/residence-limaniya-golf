@@ -32,9 +32,9 @@ export function buildICS(args: { title: string; from: string; to: string; ref: s
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Residence Azalai//FR",
+    "PRODID:-//Residence Limaniya Golf//FR",
     "BEGIN:VEVENT",
-    `UID:${args.ref}@azalai.ci`,
+    `UID:${args.ref}@limaniya-golf.ci`,
     `DTSTART:${dt(args.from)}`,
     `DTEND:${dt(args.to, true)}`,
     `SUMMARY:${args.title} — ${args.ref}`,

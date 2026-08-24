@@ -5,8 +5,9 @@ import { abidjanTime } from "../lib/format";
 export default function Ticker() {
   const now = useClock();
   const items = [
-    `Réception — ${abidjanTime(now)} à Abidjan`,
+    `Réception — ${abidjanTime(now)} à Riviera 4`,
     ...ROOMS.map((r) => `${r.name} — dès ${r.price.toLocaleString("fr-FR").replace(/\u202f/g, " ")} F / nuit`),
+    "Golf du Houphouët-Boigny — tee-time sur réservation",
     "Petit-déjeuner 06 h 30 – 10 h 30 au Fromager",
     "Navette aéroport FHB — toutes les heures",
     "Salles de conférence — devis en 24 h",

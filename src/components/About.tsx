@@ -18,7 +18,7 @@ function Stat({ value, suffix, label, start }: { value: number; suffix: string; 
 const SHOTS = [
   { src: IMAGES.lobby, caption: "La réception — marbre vert, laiton, clés numérotées à la main", ratio: "aspect-[4/3]" },
   { src: IMAGES.restaurant, caption: "Le Fromager, la table de la résidence, les pieds dans l'eau", ratio: "aspect-[16/10]" },
-  { src: IMAGES.conference, caption: "L'Amphithéâtre Le Phare, deux heures avant une plénière", ratio: "aspect-[4/3]" },
+  { src: IMAGES.amphitheatre, caption: "L'Amphithéâtre Le Phare, deux heures avant une plénière", ratio: "aspect-[4/3]" },
 ];
 
 export default function About() {
@@ -39,20 +39,21 @@ export default function About() {
             title={
               <>
                 Une adresse<br />
-                à hauteur<br />
-                <em className="text-brassl">de lagune.</em>
+                entre <em className="text-brassl">golf</em><br />
+                et lagune.
               </>
             }
           >
             <p>
-              Depuis 1987, la Résidence Azalaï occupe un hectare de jardins entre le boulevard Latrille
-              et la lagune Ébrié. On y vient pour une nuit d'escale, on y reste pour un comité de direction,
-              on y revient pour le silence des chambres et la lumière de 17 heures sur l'eau.
+              Depuis 2014, la Résidence Limaniya Golf occupe un hectare de jardins à Riviera 4,
+              à deux pas de la lagune Ébrié. On y vient pour un tour de piste, on y reste pour un comité
+              de direction, on y revient pour le silence des chambres, la lumière de 17 heures sur l'eau,
+              et les saveurs du Fromager.
             </p>
             <p className="mt-4">
-              Chaque chambre est orientée au sud-ouest, chaque salle est câblée en fibre dédiée,
-              et chaque facture peut se payer du fond de votre canapé — Wave, Orange Money, MTN MoMo,
-              Moov Money ou carte bancaire.
+              Quarante-huit chambres entre le golf et la lagune, restaurant Le Fromager, piscine infinity,
+              spa, trois salles de conférence, événementiel sur mesure — et six façons de payer
+              sans quitter votre téléphone.
             </p>
           </SectionHead>
 

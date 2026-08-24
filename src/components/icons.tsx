@@ -264,10 +264,21 @@ export const METHOD_LOGOS: Record<string, (p: P) => React.ReactElement> = {
   stripe: LogoStripe,
 };
 
+/* ————— Golf icons ————— */
+
+export const IconGolf = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <circle cx="12" cy="17" r="4" />
+    <path d="M12 5v8" />
+    <path d="M9.5 6.5 12 5l2.5 1.5" />
+  </svg>
+);
+
 const AMENITY_ICONS: Record<string, (p: P) => React.ReactElement> = {
   pool: IconPool,
   resto: IconResto,
   spa: IconSpa,
+  golf: IconGolf,
   shuttle: IconShuttle,
   wifi: IconWifi,
   car: IconCar,
@@ -281,3 +292,32 @@ export function AmenityIcon({ name, ...p }: P & { name: string }) {
   const C = AMENITY_ICONS[name] ?? IconLeaf;
   return <C {...p} />;
 }
+
+export const IconFlag = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <path d="M4 21V3" />
+    <path d="M4 3h12l-3 4 3 4H4" />
+  </svg>
+);
+
+export const IconSun = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+);
+
+export const IconDroplet = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <path d="M12 2.5c0 0-7 7.5-7 12.5a7 7 0 0 0 14 0c0-5-7-12.5-7-12.5Z" />
+  </svg>
+);
+
+export const IconCart = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <circle cx="9" cy="21" r="1.5" />
+    <circle cx="19" cy="21" r="1.5" />
+    <path d="M1 1h3.27l1.4 7h13.06l1.4-7H6" />
+    <path d="M10 14h5l-1 7h-3z" />
+  </svg>
+);

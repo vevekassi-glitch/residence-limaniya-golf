@@ -14,6 +14,7 @@ export interface CatalogItem {
   configs?: { label: string; value: number }[]; // dispositions salle
   features: string[];
   img: string;
+  gallery?: string[];
   stock: number;
   badge?: string;
 }

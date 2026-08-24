@@ -115,7 +115,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
 
   const [contact, setContact] = useState<Contact>(() => {
     try {
-      const raw = localStorage.getItem("azalai-contact");
+      const raw = localStorage.getItem("limaniya-contact");
       if (!raw) return EMPTY_CONTACT;
       const c = JSON.parse(raw) as Partial<Contact>;
       return {
@@ -197,7 +197,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
       if (!alive.current) return;
       if (res.remaining === 0) {
         setErrors({
-          dates: `Complet du ${fmtDate(from)} au ${fmtDate(to)}. Essayez d'autres dates — la réception peut aussi vous aider : +225 27 22 49 49 49.`,
+          dates: `Complet du ${fmtDate(from)} au ${fmtDate(to)}. Essayez d'autres dates — la réception peut aussi vous aider : 07 77 70 82 24.`,
         });
       } else {
         setRemaining(res.remaining);
@@ -224,7 +224,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
     const clean: Contact = { name, email, phone };
     setContact(clean);
     try {
-      localStorage.setItem("azalai-contact", JSON.stringify(clean));
+      localStorage.setItem("limaniya-contact", JSON.stringify(clean));
     } catch {
       /* stockage indisponible — la réservation continue */
     }
@@ -296,7 +296,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
         createdAt: new Date().toISOString(),
       };
       try {
-        localStorage.setItem("azalai-last", JSON.stringify(full));
+        localStorage.setItem("limaniya-last", JSON.stringify(full));
       } catch {
         /* ignore */
       }
@@ -332,12 +332,12 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
         from: reservation.from,
         to: reservation.to,
         ref: reservation.reference,
-        location: "Résidence Azalaï, Boulevard Latrille, Cocody, Abidjan",
+        location: "Résidence Limaniya Golf, Riviera 4, Rue E40, Abidjan",
         description: `Référence ${reservation.reference} · ${reservation.guests} pers. · Total réglé ${fcfa(
           reservation.quote.total
         )} · Reçu ${reservation.transactionRef}`,
       }),
-      `azalai-${reservation.reference}.ics`
+      `limaniya-${reservation.reference}.ics`
     );
     toast("Reçu calendrier (.ics) téléchargé.");
   };
@@ -354,7 +354,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
       <header className="hairline-b dark-line flex items-center justify-between px-6 py-4 md:px-8">
         <div>
           <div className="font-display text-xl italic">Réservation</div>
-          <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink/45">Résidence Azalaï — Abidjan</div>
+          <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink/45">Résidence Limaniya Golf — Riviera 4</div>
         </div>
         <button
           type="button"
@@ -599,7 +599,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
             <div>
               <FieldLabel>Téléphone (WhatsApp bienvenu)</FieldLabel>
               <div className="flex gap-3">
-                <span className="field pointer-events-none w-20 shrink-0 select-none text-center text-ink/50">+225</span>
+                <span className="pointer-events-none flex h-[unset] shrink-0 select-none items-center justify-center border-b border-[rgba(14,33,26,0.25)] bg-transparent pb-[0.6rem] pt-[0.6rem] text-center text-[0.95rem] text-ink/50" style={{ width: '5rem' }}>+225</span>
                 <input
                   type="tel"
                   autoComplete="tel-national"
@@ -687,7 +687,7 @@ function BookingInner({ prefill, onClose }: { prefill: Prefill; onClose: () => v
               <div className="fade-in">
                 <FieldLabel>Numéro {methodMeta?.name}</FieldLabel>
                 <div className="flex gap-3">
-                  <span className="field pointer-events-none w-20 shrink-0 select-none text-center text-ink/50">+225</span>
+                  <span className="pointer-events-none flex h-[unset] shrink-0 select-none items-center justify-center border-b border-[rgba(14,33,26,0.25)] bg-transparent pb-[0.6rem] pt-[0.6rem] text-center text-[0.95rem] text-ink/50" style={{ width: '5rem' }}>+225</span>
                   <input
                     value={payPhone}
                     onChange={(e) => setPayPhone(e.target.value)}

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API v1 — Résidence Azalaï (Laravel 12)
+| API v1 — Résidence Limaniya Golf (Laravel 12)
 |--------------------------------------------------------------------------
 | Installer avec : php artisan install:api  (Sanctum + routes/api.php)
 | Voir backend/README.md pour le CORS, le CSRF et les webhooks.

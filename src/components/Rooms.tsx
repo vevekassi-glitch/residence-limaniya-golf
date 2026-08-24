@@ -5,6 +5,7 @@ import { BrassButton, Reveal, SectionHead } from "./ui";
 import { IconBed, IconRuler, IconUsers, IconCheck } from "./icons";
 import type { Prefill } from "./Hero";
 import { todayIso } from "../lib/api";
+import SuiteDetail from "./SuiteDetail";
 
 export default function Rooms({ onBook }: { onBook: (p: Prefill) => void }) {
   return (
@@ -32,9 +33,13 @@ export default function Rooms({ onBook }: { onBook: (p: Prefill) => void }) {
         </div>
 
         <div className="flex flex-col gap-24 md:gap-32">
-          {ROOMS.map((room, i) => (
-            <RoomRow key={room.id} room={room} index={i} flip={i % 2 === 1} onBook={onBook} />
-          ))}
+          {ROOMS.map((room, i) =>
+            room.gallery ? (
+              <SuiteDetail key={room.id} room={room} onBook={onBook} />
+            ) : (
+              <RoomRow key={room.id} room={room} index={i} flip={i % 2 === 1} onBook={onBook} />
+            )
+          )}
         </div>
       </div>
     </section>

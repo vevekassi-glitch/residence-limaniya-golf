@@ -13,18 +13,18 @@ export default function Halls({ onBook }: { onBook: (p: Prefill) => void }) {
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           index="03"
-          kicker="Salles & séminaires"
+          kicker="Séminaires & Événementiel"
           dark
           title={
             <>
-              Vos séminaires,<br />
+              Vos événements,<br />
               notre <em className="text-brassl">scène.</em>
             </>
           }
         >
           <p>
-            Trois espaces modulables, une régie professionnelle et un coordinateur dédié du devis à la facture.
-            Pauses café, déjeuners au Fromager et blocs de chambres : tout s'ajoute d'un clic au devis.
+            Séminaires, mariages, galas, lancements de produits — trois espaces modulables, une régie professionnelle
+            et un coordinateur dédié du devis à la facture. Pauses café, déjeuners au Fromager et blocs de chambres.
           </p>
         </SectionHead>
 
@@ -38,7 +38,41 @@ export default function Halls({ onBook }: { onBook: (p: Prefill) => void }) {
           <span className="flex items-center gap-2.5"><IconScreen size={16} className="text-brass" /> Régie & projection incluses</span>
           <span className="flex items-center gap-2.5"><IconWifi size={16} className="text-brass" /> Fibre dédiée 1 Gb/s</span>
           <span className="flex items-center gap-2.5"><IconResto size={16} className="text-brass" /> Pauses & déjeuners sur place</span>
-          <span className="flex items-center gap-2.5"><IconUsers size={16} className="text-brass" /> Devis séminaire résidentiel en 24 h</span>
+          <span className="flex items-center gap-2.5"><IconUsers size={16} className="text-brass" /> Devis en 24 h</span>
+        </Reveal>
+
+        {/* ——— Événementiel ——— */}
+        <Reveal delay={200} className="mt-16">
+          <div className="border border-sand/15 bg-night/40 p-6 md:p-8">
+            <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-brass">Événementiel & célébrations</div>
+            <div className="grid gap-8 sm:grid-cols-3">
+              {[
+                {
+                  title: "Mariages & fêtes",
+                  desc: "La lagune en décor, le Fromager en traiteur, le Phare en salle de bal. De 50 à 200 invités, coordinateur dédié du premier planning au dernier toast.",
+                  tag: "50 à 200 invités",
+                },
+                {
+                  title: "Galas & dîners d'affaires",
+                  desc: "Table dressée au bord de l'eau, service à la française, musique live. Le cadre parfait pour vos soirées de gala, remises de prix ou lancements de produits.",
+                  tag: "Service à la française",
+                },
+                {
+                  title: "Célébrations privées",
+                  desc: "Anniversaires, retrouvailles, baptêmes — le salon privé du penthouse ou la terrasse du Fromager pour vos moments intimes avec vue sur la lagune.",
+                  tag: "Espaces privatifs",
+                },
+              ].map((ev, i) => (
+                <div key={ev.title} className="border-t-2 border-brass/50 pt-4">
+                  <h4 className="font-display text-xl text-sand">{ev.title}</h4>
+                  <p className="mt-2 text-[13px] leading-relaxed text-mist/80">{ev.desc}</p>
+                  <span className="mt-3 inline-block border border-brass/35 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-brass/80">
+                    {ev.tag}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

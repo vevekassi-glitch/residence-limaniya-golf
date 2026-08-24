@@ -1,4 +1,4 @@
-# Backend — Résidence Azalaï (Laravel 12)
+# Backend — Résidence Limaniya Golf (Laravel 12)
 
 ## Où est « le lien » du backend ?
 
@@ -14,8 +14,8 @@ dans ce dossier `/backend`, prêt à être lancé ou déployé.
 
 ```bash
 # 1. Squelette Laravel 12
-composer create-project laravel/laravel azalai-api
-cd azalai-api
+composer create-project laravel/laravel limaniya-api
+cd limaniya-api
 
 # 2. Installer l'API (routes/api.php + Sanctum)
 php artisan install:api
@@ -27,7 +27,7 @@ composer require stripe/stripe-php
 #    backend/routes/api.php                              → routes/api.php
 #    backend/app/Models/*.php                            → app/Models/
 #    backend/app/Http/Controllers/*.php                  → app/Http/Controllers/
-#    backend/database/migrations/2026_*_create_azalai_*  → database/migrations/
+#    backend/database/migrations/2026_*_create_limaniya_*  → database/migrations/
 
 # 5. Base de données
 php artisan migrate

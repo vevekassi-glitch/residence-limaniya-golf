@@ -90,7 +90,7 @@ export default function Payments({ onBook }: { onBook: (p: Prefill) => void }) {
                   <div className="flex items-center gap-2.5">
                     <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brass font-display text-sm italic text-night">A</span>
                     <div>
-                      <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-sand/50">Résidence Azalaï</div>
+                      <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-sand/50">Résidence Limaniya Golf</div>
                       <div className="text-xs font-medium text-sand">Payer 68 000 F — Deluxe Lagune ?</div>
                     </div>
                   </div>

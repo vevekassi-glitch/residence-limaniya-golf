@@ -23,10 +23,10 @@ export default function Faq() {
               même un dimanche de fête des mères.
             </p>
             <a
-              href="mailto:bonjour@azalai.ci"
+              href="mailto:bonjour@limaniya.ci"
               className="mt-8 inline-block border-b border-clay pb-1 font-mono text-[11px] uppercase tracking-[0.22em] text-clay transition-colors hover:border-ink hover:text-ink"
             >
-              bonjour@azalai.ci
+              bonjour@limaniya.ci
             </a>
           </SectionHead>
         </div>

@@ -1,5 +1,15 @@
 node_modules/
-.next/
 dist/
 build/
+.next/
 *.log
+.env
+.env.local
+.env.production
+.freebuff/
+.vscode/
+.idea/
+.DS_Store
+*.tgz
+coverage/
+/tmp/

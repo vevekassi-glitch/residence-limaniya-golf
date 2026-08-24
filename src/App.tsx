@@ -6,10 +6,14 @@ import Ticker from "./components/Ticker";
 import About from "./components/About";
 import Rooms from "./components/Rooms";
 import Halls from "./components/Halls";
+import Restaurant from "./components/Restaurant";
+import LoungePool from "./components/LoungePool";
+import Golf from "./components/Golf";
 import Amenities from "./components/Amenities";
 import Payments from "./components/Payments";
 import Testimonials from "./components/Testimonials";
 import Faq from "./components/Faq";
+import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Booking from "./components/Booking";
 import { ToastProvider } from "./components/ui";
@@ -32,11 +36,15 @@ export default function App() {
         <Ticker />
         <About />
         <Rooms onBook={openBooking} />
+        <Restaurant onBook={openBooking} />
         <Halls onBook={openBooking} />
+        <LoungePool />
+        <Golf />
         <Amenities />
         <Payments onBook={openBooking} />
         <Testimonials />
         <Faq />
+        <Contact />
       </main>
       <Footer />
       {booking && <Booking prefill={booking} onClose={() => setBooking(null)} />}

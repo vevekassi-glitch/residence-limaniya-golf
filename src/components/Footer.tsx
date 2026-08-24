@@ -12,20 +12,21 @@ export default function Footer() {
       return;
     }
     setEmail("");
-    toast("Bienvenue au Cercle Azalaï. Premier courriel le mois prochain.");
+    toast("Bienvenue au Cercle Limaniya Golf. Premier courriel le mois prochain.");
   };
 
   return (
-    <footer className="hairline-t relative overflow-hidden bg-night">
+    <footer id="contact" className="hairline-t relative overflow-hidden bg-night">
       <div className="mx-auto max-w-7xl px-5 pb-10 pt-20 md:px-8">
         <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <div className="font-display text-[clamp(3rem,7vw,5.5rem)] font-light italic leading-none text-sand">
-              Azala<span className="text-brass">ï</span>
+              Limaniya <em className="text-brass">Golf</em>
             </div>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-mist/80">
-              Résidence hôtelière à Cocody, Abidjan. Chambres et suites sur la lagune,
-              trois salles de conférence, une table, un jardin — et six façons de payer.
+              Résidence hôtelière à Riviera 4, Abidjan. Chambres et suites entre le golf et la lagune,
+              restaurant Le Fromager, piscine infinity, spa, salles de conférence,
+              événementiel, traiteur — et six façons de payer.
             </p>
             <div className="mt-8 flex items-center gap-3">
               {(["wave", "orange", "mtn", "moov", "visa", "stripe"] as const).map((m) => {
@@ -44,8 +45,8 @@ export default function Footer() {
             <div>
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-brass">La réception</div>
               <ul className="mt-5 space-y-3.5 text-sm text-sand/75">
-                <li className="flex items-start gap-3"><IconPin size={15} className="mt-0.5 shrink-0 text-brass" /> Boulevard Latrille, Deux-Plateaux, Cocody — Abidjan</li>
-                <li className="flex items-center gap-3"><IconPhone size={15} className="shrink-0 text-brass" /> +225 27 22 49 49 49</li>
+                <li className="flex items-start gap-3"><IconPin size={15} className="mt-0.5 shrink-0 text-brass" /> Riviera 4, Rue E40 — Abidjan</li>
+                <li className="flex items-center gap-3"><IconPhone size={15} className="shrink-0 text-brass" /> 07 77 70 82 24 / 07 77 70 82 32</li>
                 <li className="flex items-center gap-3"><IconClock size={15} className="shrink-0 text-brass" /> Conciergerie 24 h/24, 7 j/7</li>
               </ul>
             </div>
@@ -53,12 +54,12 @@ export default function Footer() {
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-brass">Plan du site</div>
               <ul className="mt-5 space-y-2.5 text-sm">
                 {[
-                  ["#maison", "La maison"],
-                  ["#chambres", "Chambres & suites"],
-                  ["#salles", "Salles & séminaires"],
-                  ["#paiement", "Paiement"],
-                  ["#avis", "Livre d'or"],
-                  ["#faq", "Questions"],
+                  ["#", "Accueil"],
+                  ["#chambres", "Chambres & Salles"],
+                  ["#salles", "Séminaires"],
+                  ["#restaurant", "Restaurant & Lounge"],
+                  ["#services", "Services"],
+                  ["#contact", "Contact"],
                 ].map(([href, label]) => (
                   <li key={href}>
                     <a href={href} className="group inline-flex items-center gap-2 text-sand/70 transition-colors hover:text-brass">
@@ -72,7 +73,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-brass">Le Cercle Azalaï</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-brass">Le Cercle Limaniya Golf</div>
             <p className="mt-5 text-sm leading-relaxed text-sand/70">
               Une lettre par mois : offres de saison, dates de séminaires et nuits à tarif Cercle.
             </p>
@@ -105,7 +106,7 @@ export default function Footer() {
         </div>
 
         <div className="hairline-t mt-16 flex flex-wrap items-center justify-between gap-4 pt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-sand/40">
-          <span>© 2026 Résidence Azalaï — Abidjan, Côte d'Ivoire</span>
+          <span>© 2026 Résidence Limaniya Golf — Riviera 4, Abidjan</span>
           <span className="flex items-center gap-2">
             <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brass/60">
               <rect x="4" y="10" width="16" height="11" rx="1.5" />

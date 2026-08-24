@@ -27,34 +27,34 @@ export default function Hero({ onBook }: { onBook: (p: Prefill) => void }) {
   const set = (v: number) => setGuests(Math.min(8, Math.max(1, v)));
 
   return (
-    <section className={`relative min-h-[100svh] overflow-hidden ${ready ? "hero-in" : ""}`}>
+    <section id="hero" className={`relative min-h-[100svh] overflow-hidden ${ready ? "hero-in" : ""}`}>
       {/* image + voile */}
       <div className="absolute inset-0">
-        <img src={IMAGES.hero} alt="La Résidence Azalaï au crépuscule, jardins et piscine" className="kenburns h-full w-full object-cover" />
+        <img src={IMAGES.hero} alt="La Résidence Limaniya Golf au crépuscule, jardins, piscine et parcours de golf" className="kenburns h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-night via-night/55 to-night/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-night via-transparent to-night/40" />
       </div>
 
       {/* coordonnées verticales */}
       <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 rotate-180 font-mono text-[10px] uppercase tracking-[0.5em] text-sand/45 [writing-mode:vertical-rl] lg:block">
-        5°21′N — 4°01′O · Cocody, Abidjan
+        5°21′N — 4°01′O · Golf du Houphouët-Boigny
       </div>
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-[390px] pt-32 md:px-8 md:pb-40">
         <div className="max-w-4xl">
           <p className="mb-6 flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.35em] text-brass">
             <span className="h-px w-12 bg-brass/60" />
-            Résidence hôtelière — depuis 1987
+            Depuis 2014 · Golf & Lagune
           </p>
           <h1 className="font-display text-[clamp(2.9rem,8.5vw,7rem)] font-light leading-[0.98] tracking-tight text-sand">
             <span className="mline"><span style={{ transitionDelay: "100ms" }}>La résidence</span></span>
-            <span className="mline"><span style={{ transitionDelay: "240ms" }}>des grands</span></span>
-            <span className="mline"><span style={{ transitionDelay: "380ms" }} className="italic text-brassl">séjours<span className="text-brass">.</span></span></span>
+            <span className="mline"><span style={{ transitionDelay: "240ms" }}>du <em className="italic text-brassl">golf</em></span></span>
+            <span className="mline"><span style={{ transitionDelay: "380ms" }} className="italic text-brassl">à Abidjan<span className="text-brass">.</span></span></span>
           </h1>
           <div className="mline mt-8 max-w-md">
             <p style={{ transitionDelay: "560ms" }} className="text-[15px] leading-relaxed text-mist">
-              Quarante-huit chambres sur la lagune Ébrié, trois salles pour vos séminaires,
-              et six façons de payer — de Wave à Visa, sans quitter votre téléphone.
+              Chambres de charme, restaurant Le Fromager, piscine infinity, spa,
+              salles de séminaires, événementiel et golf — tout est là, entre lagune et parcours.
             </p>
           </div>
         </div>

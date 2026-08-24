@@ -47,7 +47,7 @@ class PaymentController extends Controller
                 'currency' => 'XOF',
                 'channels' => $operator,
                 'customer_phone_number' => preg_replace('/\D/', '', $data['phone']),
-                'description' => 'Résidence Azalaï — '.$reservation->reference,
+                'description' => 'Résidence Limaniya Golf — '.$reservation->reference,
                 'notify_url' => url('/api/v1/webhooks/cinetpay'),
                 'return_url' => config('app.frontend_url').'/reservation/'.$reservation->reference,
                 'metadata' => json_encode(['reservation_id' => $reservation->id]),
